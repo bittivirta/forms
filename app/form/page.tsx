@@ -30,15 +30,16 @@ function ShowForm(json) {
           {json.description}
         </p>
       </div>
-      <div><form action="./form" method="POST">
-        {json.fields.map((field) => (
+      <div>
+        {json.fields.map((field, i) => (
+          <form key={i}>
           <div className="rounded-lg bg-primary-100 p-4 text-primary-600 dark:bg-primary-900 dark:text-primary-300">
             <h2 className="text-3xl font-extrabold leading-tight">
               {field[2]}
             </h2>
             <input type={field[1]} placeholder={field[3]} required={field[4]} />
-          </div>
-        ))}</form>
+          </div></form>
+        ))}
       </div>
     </div>
   );
@@ -48,7 +49,9 @@ export default function forms() {
   return (
     <main>
       <Header />
+      <section className="bg-white dark:bg-gray-900">
       {ShowForm(form)}
+      </section>
       <Footer />
     </main>
     );
