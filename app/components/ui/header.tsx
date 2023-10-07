@@ -6,13 +6,13 @@ import { faCartArrowDown, faEnvelope, faEuro, faHome, faQuestionCircle } from "@
 
 export default function Header() {
   return (
-    <Navbar rounded>
-      <Navbar.Brand href="/">
-        <Image alt="Bittivirta Logo" src="https://cdn.bittivirta.fi/graphics/logo/2023/bittivirta/svg/logo.svg" className="mr-3" width={130} height={50} />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Boilerplate 23</span>
+    <Navbar>
+      <Navbar.Brand href="https://bittivirta.fi/forms">
+        <Image alt="Bittivirta Logo" src="https://cdn.bittivirta.fi/graphics/logo/2023/bittivirta/svg/logo-light.svg" className="mr-3" width={130} height={50} />
+        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">Forms</span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Button>Get started</Button>
+        <Button>Get started now!</Button>
         <Navbar.Toggle />
       </div>
       <Navbar.Collapse>
