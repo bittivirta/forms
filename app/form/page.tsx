@@ -21,7 +21,10 @@ interface BivForm {
   error: string;
 }
 
-async function fetchForm(id: string): Promise<BivForm> {
+async function fetchForm(id: string | null): Promise<BivForm> {
+  if (!id) {
+    throw new Error("Form ID is missing");
+  }
   const formurl = "/api/forms?id=" + id;
   const response = await fetch(formurl);
   const json = await response.json();
