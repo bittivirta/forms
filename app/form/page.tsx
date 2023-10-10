@@ -22,9 +22,15 @@ interface BivForm {
 }
 
 async function fetchForm(id: string | null): Promise<BivForm> {
-  if (!id) {
-    throw new Error("Form ID is missing");
+  try {
+    if (!id) {
+      throw new Error("Form ID is missing");
+    }
+  } catch (error) {
+    console.error(error);
+    return { title: "", description: "", fields: [], error: "No data found" };
   }
+
   const formurl = "/api/forms?id=" + id;
   const response = await fetch(formurl);
   const json = await response.json();
@@ -96,7 +102,7 @@ export default function Form() {
                   type={field.type}
                   placeholder={field.placeholder}
                   required={field.required}
-                  className="w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 text-gray-600 border-2 border-indigo-300 dark:bg-primary-800 dark:text-dark-300 {field.required ? 'border-red-500' : 'border-gray-300'}"
+                  className="w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 text-gray-600 border-2 border-indigo-300 dark:bg-primary-800 dark:text-gray-300 {field.required ? 'border-red-500' : 'border-gray-300'}"
                 />
               </div>
             </form>
