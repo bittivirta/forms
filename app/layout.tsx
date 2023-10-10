@@ -8,7 +8,7 @@ config.autoAddCss = false
 const ubuntu = Ubuntu({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
-  title: "Next.js + TypeScript + Tailwind + Flowbite + SCSS = Bittivirta 23 Boilerplate",
+  title: "Bittivirta Forms",
   description: "Make a wish, and we will play it for you.",
 };
 
