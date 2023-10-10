@@ -19,6 +19,7 @@ interface BivForm {
   description: string;
   fields: FormField[];
   error: string;
+  submit: string;
 }
 
 async function fetchForm(id: string | null): Promise<BivForm> {
@@ -28,12 +29,26 @@ async function fetchForm(id: string | null): Promise<BivForm> {
     }
   } catch (error) {
     console.error(error);
-    return { title: "", description: "", fields: [], error: "No data found" };
+    return {
+      title: "",
+      description: "",
+      fields: [],
+      error: "No data found",
+      submit: "",
+    };
   }
 
   const formurl = "/api/forms?id=" + id;
   const response = await fetch(formurl);
   const json = await response.json();
+  // if form contains form.fields submit then return json, if doesnt add submit button
+  if (json.fields.find((field: String) => field.type === "submit")) {
+    return json;
+  }
+  json.fields.push({
+    id: "submit",
+    type: "submit",
+  });
   return json;
 }
 
@@ -96,13 +111,20 @@ export default function Form() {
                   className="block text-primary-600 dark:text-gray-200"
                 >
                   {field.label}
+                  <span className="text-red-500">
+                    {" "}
+                    {field.required ? " *" : ""}
+                  </span>
                 </label>
 
                 <input
                   type={field.type}
                   placeholder={field.placeholder}
                   required={field.required}
-                  className="w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 text-gray-600 border-2 border-indigo-300 dark:bg-primary-800 dark:text-gray-300 {field.required ? 'border-red-500' : 'border-gray-300'}"
+                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 text-gray-600 border-2 dark:text-gray-300 ${
+                    field.required ? "border-red-500" : "border-gray-300"
+                  }`}
+                  value={searchParams.get(field.id) || undefined}
                 />
               </div>
             </form>
