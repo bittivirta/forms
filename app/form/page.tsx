@@ -37,14 +37,28 @@ async function fetchForm(id: string | null): Promise<BivForm> {
       submit: "",
     };
   }
-
   const formurl = "/api/forms?id=" + id;
   const response = await fetch(formurl);
   const json = await response.json();
   // if form contains form.fields submit then return json, if doesnt add submit button
-  if (json.fields.find((field: String) => field.type === "submit")) {
+  try {
+    if (!json.fields) {
+      throw new Error("Form fields are missing");
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "",
+      description: "",
+      fields: [],
+      error: "No data found",
+      submit: "",
+    };
+  }
+  if (json.fields.find((field: FormField) => field.id === "submit")) {
     return json;
   }
+
   json.fields.push({
     id: "submit",
     type: "submit",
@@ -60,12 +74,14 @@ export default function Form() {
 
   useEffect(() => {
     async function loadForm() {
-      const form = await fetchForm(reqId);
-      setForm(form);
+      if (!form) {
+        const form = await fetchForm(reqId);
+        setForm(form);
+      }
     }
 
     loadForm();
-  }, []);
+  });
 
   if (!form) {
     return null;
@@ -103,9 +119,9 @@ export default function Form() {
           </p>
         </div>
         <div>
-          {form.fields.map((field, i) => (
-            <form key={i}>
-              <div className="p-4">
+          <form method="post">
+            {form.fields.map((field, i) => (
+              <div className="p-4" key={i}>
                 <label
                   htmlFor={field.id}
                   className="block text-primary-600 dark:text-gray-200"
@@ -121,14 +137,12 @@ export default function Form() {
                   type={field.type}
                   placeholder={field.placeholder}
                   required={field.required}
-                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 text-gray-600 border-2 dark:text-gray-300 ${
-                    field.required ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500`}
                   value={searchParams.get(field.id) || undefined}
                 />
               </div>
-            </form>
-          ))}
+            ))}
+          </form>
         </div>
       </div>
       <Footer />
