@@ -87,9 +87,9 @@ export default function Form() {
     try {
       const formData = new FormData(event.currentTarget);
       // convert formdata to json and get input values
-      const object = {};
+      const object: { [key: string]: string } = {};
       formData.forEach(function (value, key) {
-        object[key] = value;
+        object[key] = value.toString();
       });
 
       const json = JSON.stringify(object);
@@ -107,9 +107,10 @@ export default function Form() {
       // Handle response if necessary
       const data = await response.json();
       // ...
-    } catch (error) {
+    } catch (error: any) {
       // Capture the error message to display to the user
-      setError(error.message);
+      const errorMessage = error.message as string;
+      setError(errorMessage);
       console.error(error);
     } finally {
       setIsLoading(false);
