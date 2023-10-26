@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 import { useSearchParams } from "next/navigation";
 
@@ -55,18 +55,12 @@ async function fetchForm(id: string | null): Promise<BivForm> {
       submit: "",
     };
   }
-  if (json.fields.find((field: FormField) => field.id === "submit")) {
-    return json;
-  }
-
-  json.fields.push({
-    id: "submit",
-    type: "submit",
-  });
   return json;
 }
 
 export default function Form() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   const [form, setForm] = useState<BivForm | null>(null);
@@ -82,10 +76,46 @@ export default function Form() {
 
     loadForm();
   });
-
   if (!form) {
     return null;
   }
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null); // Clear previous errors when a new request starts
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      // convert formdata to json and get input values
+      const object = {};
+      formData.forEach(function (value, key) {
+        object[key] = value;
+      });
+
+      const json = JSON.stringify(object);
+      const response = await fetch("/api/formhandler", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: json,
+      });
+      if (!response.ok) {
+        throw new Error("Failed to submit the data. Please try again.");
+      }
+
+      // Handle response if necessary
+      const data = await response.json();
+      // ...
+    } catch (error) {
+      // Capture the error message to display to the user
+      setError(error.message);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || form.fields.length === 0) {
     return (
@@ -94,9 +124,9 @@ export default function Form() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-              404 - Requested form not found
+              404
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-200">
+            <p className="text-3xl text-gray-600 dark:text-gray-200">
               Please check the URL or if you think this is an error, please
               contact us at on Discord.
             </p>
@@ -110,7 +140,7 @@ export default function Form() {
     <main className="dark:bg-primary-900">
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="w-full">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
             {form.title}
           </h1>
@@ -119,9 +149,9 @@ export default function Form() {
           </p>
         </div>
         <div>
-          <form method="post">
+          <form onSubmit={onSubmit}>
             {form.fields.map((field, i) => (
-              <div className="p-4" key={i}>
+              <div className="py-2" key={i}>
                 <label
                   htmlFor={field.id}
                   className="block text-primary-600 dark:text-gray-200"
@@ -137,11 +167,19 @@ export default function Form() {
                   type={field.type}
                   placeholder={field.placeholder}
                   required={field.required}
-                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500`}
+                  name={field.id}
+                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white`}
                   value={searchParams.get(field.id) || undefined}
                 />
               </div>
             ))}
+            <button
+              type="submit"
+              className="p-4 mt-4 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white"
+              disabled={isLoading}
+            >
+              {isLoading ? "Loading..." : "Submit"}
+            </button>
           </form>
         </div>
       </div>
