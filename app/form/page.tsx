@@ -1,4 +1,5 @@
 "use client";
+// FORM PAGE
 import { useState, useEffect, FormEvent } from "react";
 
 import { useSearchParams } from "next/navigation";
@@ -92,13 +93,26 @@ export default function Form() {
         object[key] = value.toString();
       });
 
-      const json = JSON.stringify(object);
+      const userInput = object;
+      const formid = reqId;
+      let timestamp = Date.now();
+      // generate random uuid
+      const inputId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          const r = (timestamp + Math.random() * 16) % 16 | 0;
+          let z = Math.floor(timestamp / 16);
+          return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        }
+      );
+
+      const formdata = { inputId, formid, timestamp, userInput };
       const response = await fetch("/api/formhandler", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: json,
+        body: JSON.stringify(formdata),
       });
       if (!response.ok) {
         throw new Error("Failed to submit the data. Please try again.");
