@@ -50,7 +50,7 @@ async function getResponses(vars, surveyid) {
   // Initialize an object to store the responses
   const responses = {};
   // Add the survey metadata to the responses object
-  responses[0] = {
+  responses["general"] = {
     title: vars.title,
     description: vars.description,
     fields: vars.fieldnames,
@@ -81,7 +81,7 @@ async function getResponses(vars, surveyid) {
         // return the response object
         responses[i] = response;
         // increment the response amount
-        responses[0].response_amount = i;
+        responses["general"].response_amount = i++;
       });
   }
   // return the responses as a JSON string
