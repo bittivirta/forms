@@ -14,7 +14,7 @@
 .next/
 # production
 /build
-/forms
+/submissions
 
 # misc
 .DS_Store
