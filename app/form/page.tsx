@@ -13,6 +13,13 @@ interface FormField {
   label: string;
   placeholder: string;
   required: boolean;
+  value?: string;
+  min?: string;
+  max?: string;
+  pattern?: string;
+  step?: string;
+  error?: string;
+  hidden?: boolean;
 }
 
 interface BivForm {
@@ -66,7 +73,16 @@ export default function Form() {
 
   const [form, setForm] = useState<BivForm | null>(null);
   const reqId = searchParams.get("id");
-
+  let starttime = Date.now();
+  // generate random uuid
+  const inputId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      const r = (starttime + Math.random() * 16) % 16 | 0;
+      let z = Math.floor(starttime / 16);
+      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
   useEffect(() => {
     async function loadForm() {
       if (!form) {
@@ -96,17 +112,7 @@ export default function Form() {
       const userInput = object;
       const formid = reqId;
       let timestamp = Date.now();
-      // generate random uuid
-      const inputId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-        /[xy]/g,
-        function (c) {
-          const r = (timestamp + Math.random() * 16) % 16 | 0;
-          let z = Math.floor(timestamp / 16);
-          return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-        }
-      );
-
-      const formdata = { inputId, formid, timestamp, userInput };
+      const formdata = { inputId, formid, starttime, timestamp, userInput };
       const response = await fetch("/api/formhandler", {
         method: "POST",
         headers: {
@@ -120,6 +126,7 @@ export default function Form() {
 
       // Handle response if necessary
       const data = await response.json();
+
       // ...
     } catch (error: any) {
       // Capture the error message to display to the user
@@ -127,7 +134,11 @@ export default function Form() {
       setError(errorMessage);
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        if (reqId) {
+          window.location.href = `/success?id=${inputId}`;
+        }
+      }, 150);
     }
   }
 
@@ -165,36 +176,44 @@ export default function Form() {
         </div>
         <div>
           <form onSubmit={onSubmit}>
-            {form.fields.map((field, i) => (
-              <div className="py-2" key={i}>
-                <label
-                  htmlFor={field.id}
-                  className="block text-primary-600 dark:text-gray-200"
-                >
-                  {field.label}
-                  <span className="text-red-500">
-                    {" "}
-                    {field.required ? " *" : ""}
-                  </span>
-                </label>
+            <div className="grid gap-4 py-2">
+              {form.fields.map((field, i) => (
+                <div className={field.hidden ? "hidden" : ""} key={i}>
+                  <label
+                    htmlFor={field.id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    {field.label}
+                    <span className="text-red-500">
+                      {" "}
+                      {field.required ? " *" : ""}
+                    </span>
+                  </label>
 
-                <input
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  required={field.required}
-                  name={field.id}
-                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white`}
-                  value={searchParams.get(field.id) || undefined}
-                />
-              </div>
-            ))}
-            <button
-              type="submit"
-              className="p-4 mt-4 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white"
-              disabled={isLoading}
-            >
-              {isLoading ? "Loading..." : "Submit"}
-            </button>
+                  <input
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    required={field.required}
+                    name={field.id}
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block border-2 p-4 mt-4 w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                    value={
+                      searchParams.get(field.id) || field.value || undefined
+                    }
+                    min={field.min}
+                    max={field.max}
+                    pattern={field.pattern}
+                    step={field.step}
+                  />
+                </div>
+              ))}
+              <button
+                type="submit"
+                className="p-4 auto-cols-max mt-4 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Submit"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
