@@ -3,6 +3,8 @@
 import { useState, useEffect, FormEvent } from "react";
 
 import { useSearchParams } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStopwatch, faPaperPlane } from "@fortawesome/pro-solid-svg-icons";
 
 import Header from "../components/ui/header";
 import Footer from "../components/ui/footer";
@@ -13,6 +15,8 @@ interface BivForm {
     description: string;
     fields: [];
     response_amount: number;
+    avg_duration: number;
+    duration_available: number;
   };
   responses: [];
   error?: string;
@@ -103,9 +107,32 @@ export default function Form() {
             {form.general.description}
           </p>
           <hr className="p-4 mt-4" />
-          <h4 className="text-3xl text-gray-600 dark:text-gray-200">
-            {form.general.response_amount} responses
-          </h4>
+          <div className="flex flex-row">
+            <div className="w-1/2">
+              <p className="text-xl text-gray-600 dark:text-gray-200 w-full">
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  fixedWidth
+                  className="mr-2"
+                />
+                {form.general.response_amount}{" "}
+                {form.general.response_amount > 1 ? "responses" : "response"}{" "}
+              </p>
+            </div>
+            <div className="w-1/2">
+              <p className="text-xl text-gray-600 dark:text-gray-200 w-full">
+                <FontAwesomeIcon
+                  icon={faStopwatch}
+                  fixedWidth
+                  className="mr-2"
+                />
+                Average form submission time {form.general.avg_duration}{" "}
+                {form.general.duration_available !== 0
+                  ? "seconds"
+                  : "not availablex"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
