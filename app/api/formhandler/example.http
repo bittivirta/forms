@@ -11,3 +11,14 @@ content-type: application/json
 
 GET http://localhost:3000/api/formhandler HTTP/1.1
 content-type: application/html
+
+###
+
+GET http://localhost:3000/api/formstats?id=futurice-yritysvierailu
+
+###
+GET http://localhost:3000/api/formstats?id=1
+
+###
+
+GET http://localhost:3000/api/formstats?id=3c4dd30b-b9d8-4f43-bc06-ca1fd36fe1f5
