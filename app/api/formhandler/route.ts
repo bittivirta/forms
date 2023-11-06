@@ -8,7 +8,6 @@ export async function POST(req: Request) {
     );
   }
   const res = await req.json();
-  console.log(res);
   saveOutput(res);
   return NextResponse.json(res, { status: 200 });
 }
@@ -23,7 +22,6 @@ interface FormInput {
 }
 function saveOutput(res: FormInput) {
   const data = res;
-  console.log(data);
   const formid = data.formid;
   const uuid = data.inputId;
   const fs = require("fs");
@@ -43,6 +41,8 @@ function saveOutput(res: FormInput) {
 
   fsPromises
     .writeFile(output, JSON.stringify(data))
-    .then(() => console.log("success"))
-    .catch((err) => console.log(err));
+    .then(() =>
+      console.log("data added to form " + formid + " with id " + uuid)
+    )
+    .catch((err: string) => console.log(err));
 }
