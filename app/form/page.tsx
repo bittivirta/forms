@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import Header from "../components/ui/header";
 import Footer from "../components/ui/footer";
+import Link from "next/link";
 
 interface FormField {
   id: string;
@@ -20,14 +21,17 @@ interface FormField {
   step?: string;
   error?: string;
   hidden?: boolean;
+  tc?: boolean;
+  link?: string;
 }
 
 interface BivForm {
-  title: string;
-  description: string;
+  code?: string;
+  title?: string;
+  description?: string;
   fields: FormField[];
-  error: string;
-  submit: string;
+  error?: string;
+  submit?: string;
 }
 
 async function fetchForm(id: string | null): Promise<BivForm> {
@@ -38,11 +42,8 @@ async function fetchForm(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
-      title: "",
-      description: "",
-      fields: [],
       error: "No data found",
-      submit: "",
+      fields: [],
     };
   }
   const formurl = "/api/forms?id=" + id;
@@ -51,16 +52,14 @@ async function fetchForm(id: string | null): Promise<BivForm> {
   // if form contains form.fields submit then return json, if doesnt add submit button
   try {
     if (!json.fields) {
-      throw new Error("Form fields are missing");
+      throw new Error(json.error);
     }
   } catch (error) {
     console.error(error);
     return {
-      title: "",
-      description: "",
+      error: json.error,
+      code: json.code,
       fields: [],
-      error: "No data found",
-      submit: "",
     };
   }
   return json;
@@ -150,11 +149,11 @@ export default function Form() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-              404
+              {form.code || "404"}
             </h1>
             <p className="text-3xl text-gray-600 dark:text-gray-200">
-              Please check the URL or if you think this is an error, please
-              contact us at on Discord.
+              {form.error ||
+                "Please check the URL or if you think this is an error, please contact us at on Discord."}
             </p>
           </div>
         </div>
@@ -183,7 +182,18 @@ export default function Form() {
                     htmlFor={field.id}
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    {field.label}
+                    {field.label + " "}
+                    {field.tc ? (
+                      <Link
+                        href={field.link}
+                        target="_blank"
+                        className="text-blue-500"
+                      >
+                        {field.placeholder}
+                      </Link>
+                    ) : (
+                      ""
+                    )}
                     <span className="text-red-500">
                       {" "}
                       {field.required ? " *" : ""}

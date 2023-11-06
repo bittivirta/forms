@@ -1,6 +1,14 @@
 {
   "title": "Example form",
   "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  "supported_fieldtypes": [
+    "text",
+    "email",
+    "number",
+    "date",
+    "datetime-local",
+    "hidden"
+  ],
   "fields": [
     {
       "id": "name",
@@ -41,8 +49,18 @@
       "label": "Other",
       "placeholder": "Anything else you want to tell us or ask from Company Y?",
       "required": false
+    },
+    {
+      "id": "Terms & Conditions",
+      "tc": true,
+      "fieldorder": 5,
+      "type": "hidden",
+      "label": "By submitting this form, you agree to our",
+      "placeholder": "Terms & Conditions",
+      "link": "https://www.example.com/terms-and-conditions",
+      "value": "I agree to the terms and conditions"
     }
   ],
   "publicfields": ["other", "diet"],
-  "expires": 1699291627
+  "expires": 1709378027
 }
