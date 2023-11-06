@@ -14,8 +14,14 @@ export async function POST(req: Request) {
 }
 
 // save request json to file, path for data is /submissions/formname/output.json
-
-function saveOutput(res: JSON) {
+interface FormInput {
+  inputId: string;
+  formid: string;
+  starttime: string;
+  timestamp: string;
+  userInput: [];
+}
+function saveOutput(res: FormInput) {
   const data = res;
   console.log(data);
   const formid = data.formid;
