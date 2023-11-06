@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function GET(request) {
   // Extract the survey ID from the request URL's search parameters
   const surveyid = request.nextUrl.searchParams.get("id");
-
   // Construct the path to the directory where the survey data is stored
   const datapath = process.cwd() + "/submissions/" + surveyid;
   // Import the fs.promises module for working with the file system
@@ -42,6 +41,7 @@ async function getResponses(vars, surveyid) {
   // Import the fs.promises module for working with the file system
   const fsPromises = require("fs").promises;
   // Get the number of public fields in the survey
+
   const respLength = vars.publicfields.length;
   // Try to read the directory and get a list of all files in it
   const files = await fsPromises
@@ -55,6 +55,8 @@ async function getResponses(vars, surveyid) {
     description: vars.description,
     fields: vars.fieldnames,
     response_amount: 0,
+    avg_duration: 0,
+    duration_available: 0,
   };
 
   responses["responses"] = {};
@@ -75,7 +77,20 @@ async function getResponses(vars, surveyid) {
         // parse the JSON into an object
         data = JSON.parse(data);
         // create a response object with the ID and the public fields
-        let response = { id: data.inputId, queries: [] };
+        let response = {
+          id: data.inputId,
+          queries: [],
+        };
+        // calculate the response time based on endtime - starttime
+        if (
+          typeof data.timestamp === "number" &&
+          typeof data.starttime === "number"
+        ) {
+          responses["general"].avg_duration =
+            responses["general"].avg_duration +
+            (data.timestamp - data.starttime);
+          responses["general"].duration_available++;
+        }
         // loop over the public fields and add them to the response object
         for (j = 0; j < respLength; j++) {
           // get the field ID from the public fields array
@@ -90,6 +105,10 @@ async function getResponses(vars, surveyid) {
           responses["general"].response_amount + 1;
       });
   }
+  responses["general"].avg_duration =
+    responses["general"].avg_duration /
+    responses["general"].duration_available /
+    1000;
   // return the responses as a JSON string
   return JSON.stringify(responses);
 }
@@ -105,6 +124,12 @@ async function getPublicFields(surveyid) {
   }
   // parse the JSON into an object
   const data = JSON.parse(fileContents);
+
+  // check if the publicfields array exists, if it doesnt, create empty array
+  if (data.publicfields === undefined) {
+    data.publicfields = [];
+  }
+
   // return title, description, and publicfields
   let fieldNames = [];
   // loop over the public fields and add them to the fieldNames array
