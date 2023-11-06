@@ -56,10 +56,14 @@ async function getResponses(vars, surveyid) {
     fields: vars.fieldnames,
     response_amount: 0,
   };
+
+  responses["responses"] = {};
   // Loop over the files and process each one
   for (let i = 0; i < files.length; i++) {
     // read only JSON files
     if (!files[i].endsWith(".json")) {
+      console.log("not a JSON file");
+
       continue;
     }
     const fileContents = await fsPromises
@@ -67,6 +71,7 @@ async function getResponses(vars, surveyid) {
       .catch((err) => console.error("Failed to read file", err))
       .then((data) => {
         let j = 0;
+
         // parse the JSON into an object
         data = JSON.parse(data);
         // create a response object with the ID and the public fields
@@ -77,11 +82,12 @@ async function getResponses(vars, surveyid) {
           let fieldid = vars.publicfields[j];
           // add the field to the response object
           response.queries.push(data.userInput[fieldid]);
+          responses["responses"][i] = response;
         }
         // return the response object
-        responses[i] = response;
         // increment the response amount
-        responses["general"].response_amount = i++;
+        responses["general"].response_amount =
+          responses["general"].response_amount + 1;
       });
   }
   // return the responses as a JSON string
