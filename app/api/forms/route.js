@@ -8,7 +8,29 @@ export async function GET(request) {
     .readFile(datapath, "utf8")
     .catch((err) => console.error("Failed to read file", err));
   if (fileContents === undefined) {
-    return NextResponse.json({ error: "No data found" }, { status: 404 });
+    return NextResponse.json(
+      {
+        code: 404,
+        error:
+          "Please check the URL or if you think this is an error, please contact us at on Discord.",
+      },
+      { status: 404 }
+    );
   }
-  return NextResponse.json(JSON.parse(fileContents));
+  let data = JSON.parse(fileContents);
+  let time = Date.now();
+  if (data.expires * 1000 > time && data.expires !== undefined) {
+    return NextResponse.json(JSON.parse(fileContents));
+  } else if (data.expires === undefined) {
+    return NextResponse.json(JSON.parse(fileContents));
+  } else {
+    return NextResponse.json(
+      {
+        code: 410,
+        error:
+          "Access denied, this module has expired. Please check the URL or if you think this is an error, please contact us at on Discord.",
+      },
+      { status: 410 }
+    );
+  }
 }
