@@ -64,8 +64,6 @@ async function getResponses(vars, surveyid) {
   for (let i = 0; i < files.length; i++) {
     // read only JSON files
     if (!files[i].endsWith(".json")) {
-      console.log("not a JSON file");
-
       continue;
     }
     const fileContents = await fsPromises
