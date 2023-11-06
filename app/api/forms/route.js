@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
 
 export async function GET(request) {
   const surveyid = request.nextUrl.searchParams.get("id");
-  const datapath = process.cwd() + "/data/" + surveyid + ".json";
+  const datapath = process.cwd() + "/queries/" + surveyid + ".json";
   const fsPromises = require("fs").promises;
   const fileContents = await fsPromises
     .readFile(datapath, "utf8")
