@@ -7,14 +7,36 @@ export async function POST(req: Request) {
       { status: 415 }
     );
   }
-  console.log(req);
   const res = await req.json();
   console.log(res);
+  saveOutput(res);
   return NextResponse.json(res, { status: 200 });
 }
-export async function GET() {
-  return NextResponse.json(
-    { error: "This page supports only POST requests" },
-    { status: 405 }
+
+// save request json to file, path for data is /submissions/formname/output.json
+
+function saveOutput(res: JSON) {
+  const data = res;
+  console.log(data);
+  const formid = data.formid;
+  const uuid = data.inputId;
+  const fs = require("fs");
+  const fsPromises = require("fs").promises;
+  const path = require("path");
+  // create auto increment id for each form
+
+  const output = path.join(
+    process.cwd(),
+    "submissions",
+    formid,
+    `${uuid}.json`
   );
+  if (!fs.existsSync(path.join(process.cwd(), "submissions", formid))) {
+    fsPromises.mkdir(path.join(process.cwd(), "submissions", formid));
+  }
+
+  fsPromises
+    .writeFile(output, JSON.stringify(data))
+    .then(() => console.log("success"))
+    .catch((err) => console.log(err));
 }
