@@ -14,7 +14,7 @@ interface BivForm {
     fields: [];
     response_amount: number;
   };
-  responses?: {};
+  responses: [];
   error?: string;
 }
 
@@ -28,6 +28,7 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
     console.error(error);
     return {
       error: "No data found",
+      responses: [],
     };
   }
   const formurl = "/api/formstats?id=" + id;
@@ -42,6 +43,7 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
     console.error(error);
     return {
       error: "No data found",
+      responses: [],
     };
   }
   return json;
@@ -68,9 +70,9 @@ export default function Form() {
   if (!form) {
     return null;
   }
-
+  const responseData = form.responses;
   //if fetched form contains {"error":"No data found"} then return 404 page
-  if (form.error || form.status === "error" || !form.fields) {
+  if (form.error || !form.general) {
     return (
       <main className="dark:bg-primary-900">
         <Header />
@@ -95,36 +97,15 @@ export default function Form() {
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
         <div className="w-full">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-            {form.title}
+            {form.general.title}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-200">
-            {form.description}
+            {form.general.description}
           </p>
-        </div>
-        <div>
-          {form.fields.map((field, i) => (
-            <div className="py-2" key={i}>
-              <label
-                htmlFor={field.id}
-                className="block text-primary-600 dark:text-gray-200"
-              >
-                {field.label}
-                <span className="text-red-500">
-                  {" "}
-                  {field.required ? " *" : ""}
-                </span>
-              </label>
-
-              <input
-                type={field.type}
-                placeholder={field.placeholder}
-                required={field.required}
-                name={field.id}
-                className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white`}
-                value={searchParams.get(field.id) || undefined}
-              />
-            </div>
-          ))}
+          <hr className="p-4 mt-4" />
+          <h4 className="text-3xl text-gray-600 dark:text-gray-200">
+            {form.general.response_amount} responses
+          </h4>
         </div>
       </div>
       <Footer />
