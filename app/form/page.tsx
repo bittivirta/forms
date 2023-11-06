@@ -1,10 +1,12 @@
 "use client";
-import { useState, useEffect } from "react";
+// FORM PAGE
+import { useState, useEffect, FormEvent } from "react";
 
 import { useSearchParams } from "next/navigation";
 
 import Header from "../components/ui/header";
 import Footer from "../components/ui/footer";
+import Link from "next/link";
 
 interface FormField {
   id: string;
@@ -12,14 +14,24 @@ interface FormField {
   label: string;
   placeholder: string;
   required: boolean;
+  value?: string;
+  min?: string;
+  max?: string;
+  pattern?: string;
+  step?: string;
+  error?: string;
+  hidden?: boolean;
+  tc?: boolean;
+  link: string;
 }
 
 interface BivForm {
-  title: string;
-  description: string;
+  code?: string;
+  title?: string;
+  description?: string;
   fields: FormField[];
-  error: string;
-  submit: string;
+  error?: string;
+  submit?: string;
 }
 
 async function fetchForm(id: string | null): Promise<BivForm> {
@@ -30,11 +42,8 @@ async function fetchForm(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
-      title: "",
-      description: "",
-      fields: [],
       error: "No data found",
-      submit: "",
+      fields: [],
     };
   }
   const formurl = "/api/forms?id=" + id;
@@ -43,35 +52,36 @@ async function fetchForm(id: string | null): Promise<BivForm> {
   // if form contains form.fields submit then return json, if doesnt add submit button
   try {
     if (!json.fields) {
-      throw new Error("Form fields are missing");
+      throw new Error(json.error);
     }
   } catch (error) {
     console.error(error);
     return {
-      title: "",
-      description: "",
+      error: json.error,
+      code: json.code,
       fields: [],
-      error: "No data found",
-      submit: "",
     };
   }
-  if (json.fields.find((field: FormField) => field.id === "submit")) {
-    return json;
-  }
-
-  json.fields.push({
-    id: "submit",
-    type: "submit",
-  });
   return json;
 }
 
 export default function Form() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   const [form, setForm] = useState<BivForm | null>(null);
   const reqId = searchParams.get("id");
-
+  let starttime = Date.now();
+  // generate random uuid
+  const inputId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      const r = (starttime + Math.random() * 16) % 16 | 0;
+      let z = Math.floor(starttime / 16);
+      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
   useEffect(() => {
     async function loadForm() {
       if (!form) {
@@ -82,10 +92,55 @@ export default function Form() {
 
     loadForm();
   });
-
   if (!form) {
     return null;
   }
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null); // Clear previous errors when a new request starts
+
+    try {
+      const formData = new FormData(event.currentTarget);
+      // convert formdata to json and get input values
+      const object: { [key: string]: string } = {};
+      formData.forEach(function (value, key) {
+        object[key] = value.toString();
+      });
+
+      const userInput = object;
+      const formid = reqId;
+      let timestamp = Date.now();
+      const formdata = { inputId, formid, starttime, timestamp, userInput };
+      const response = await fetch("/api/formhandler", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formdata),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to submit the data. Please try again.");
+      }
+
+      // Handle response if necessary
+      const data = await response.json();
+
+      // ...
+    } catch (error: any) {
+      // Capture the error message to display to the user
+      const errorMessage = error.message as string;
+      setError(errorMessage);
+      console.error(error);
+    } finally {
+      setTimeout(() => {
+        if (reqId) {
+          window.location.href = `/success?id=${inputId}`;
+        }
+      }, 150);
+    }
+  }
+
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || form.fields.length === 0) {
     return (
@@ -94,11 +149,11 @@ export default function Form() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-              404 - Requested form not found
+              {form.code || "404"}
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-200">
-              Please check the URL or if you think this is an error, please
-              contact us at on Discord.
+            <p className="text-3xl text-gray-600 dark:text-gray-200">
+              {form.error ||
+                "Please check the URL or if you think this is an error, please contact us at on Discord."}
             </p>
           </div>
         </div>
@@ -110,7 +165,7 @@ export default function Form() {
     <main className="dark:bg-primary-900">
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="w-full">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
             {form.title}
           </h1>
@@ -119,29 +174,57 @@ export default function Form() {
           </p>
         </div>
         <div>
-          <form method="post">
-            {form.fields.map((field, i) => (
-              <div className="p-4" key={i}>
-                <label
-                  htmlFor={field.id}
-                  className="block text-primary-600 dark:text-gray-200"
-                >
-                  {field.label}
-                  <span className="text-red-500">
-                    {" "}
-                    {field.required ? " *" : ""}
-                  </span>
-                </label>
+          <form onSubmit={onSubmit}>
+            <div className="grid gap-4 py-2">
+              {form.fields.map((field, i) => (
+                // if field.hidden is true then add hidden class
+                <div className={field.hidden ? "hidden" : ""} key={i}>
+                  <label
+                    htmlFor={field.id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    {field.label + " "}
+                    {field.tc ? (
+                      <Link
+                        href={field.link ? field.link : "#"}
+                        target="_blank"
+                        className="text-blue-500"
+                      >
+                        {field.placeholder}
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                    <span className="text-red-500">
+                      {" "}
+                      {field.required ? " *" : ""}
+                    </span>
+                  </label>
 
-                <input
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  required={field.required}
-                  className={`w-full p-2 mt-2 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500`}
-                  value={searchParams.get(field.id) || undefined}
-                />
-              </div>
-            ))}
+                  <input
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    required={field.required}
+                    name={field.id}
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block border-2 p-4 mt-4 w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                    value={
+                      searchParams.get(field.id) || field.value || undefined
+                    }
+                    min={field.min}
+                    max={field.max}
+                    pattern={field.pattern}
+                    step={field.step}
+                  />
+                </div>
+              ))}
+              <button
+                type="submit"
+                className="p-4 auto-cols-max mt-4 rounded-lg bg-primary-200 dark:bg-gray-700 border-gray-300 text-gray-600 border-2 focus:outline-none focus:border-primary-500 dark:focus:border-gray-500 dark:placeholder-white dark:text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Submit"}
+              </button>
+            </div>
           </form>
         </div>
       </div>
