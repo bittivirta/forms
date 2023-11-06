@@ -22,7 +22,7 @@ interface FormField {
   error?: string;
   hidden?: boolean;
   tc?: boolean;
-  link?: string;
+  link: string;
 }
 
 interface BivForm {
@@ -177,6 +177,7 @@ export default function Form() {
           <form onSubmit={onSubmit}>
             <div className="grid gap-4 py-2">
               {form.fields.map((field, i) => (
+                // if field.hidden is true then add hidden class
                 <div className={field.hidden ? "hidden" : ""} key={i}>
                   <label
                     htmlFor={field.id}
@@ -185,7 +186,7 @@ export default function Form() {
                     {field.label + " "}
                     {field.tc ? (
                       <Link
-                        href={field.link}
+                        href={field.link ? field.link : "#"}
                         target="_blank"
                         className="text-blue-500"
                       >
