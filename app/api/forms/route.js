@@ -50,6 +50,7 @@ async function fetchData(database, surveyid) {
     const queryContents = await getForm(surveyid);
     return queryContents;
   } else {
+    const datapath = process.cwd() + "/queries/" + surveyid + ".json";
     const fsPromises = require("fs").promises;
     const queryContents = await fsPromises
       .readFile(datapath, "utf8")
