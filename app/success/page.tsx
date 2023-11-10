@@ -13,7 +13,6 @@ export default function Success_page() {
     const regex = new RegExp(
       "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-4[0-9a-fA-F]{3}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
     );
-    console.log(uuid.match(regex));
     return uuid.match(regex);
   }
   // if UUID is not valid, return 404 page
