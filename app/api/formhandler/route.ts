@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { addResponse, databaseAvailable } from "../../lib/db-functions";
 
 export async function POST(req: Request) {
   if (req.headers.get("content-type") !== "application/json") {
@@ -16,33 +17,50 @@ export async function POST(req: Request) {
 interface FormInput {
   inputId: string;
   formid: string;
-  starttime: string;
-  timestamp: string;
+  starttime: number;
+  timestamp: number;
   userInput: [];
 }
-function saveOutput(res: FormInput) {
+async function saveOutput(res: FormInput) {
+  const database = await databaseAvailable();
   const data = res;
   const formid = data.formid;
   const uuid = data.inputId;
-  const fs = require("fs");
-  const fsPromises = require("fs").promises;
-  const path = require("path");
-  // create auto increment id for each form
+  const startTime = data.starttime;
+  const endTime = data.timestamp;
 
-  const output = path.join(
-    process.cwd(),
-    "submissions",
-    formid,
-    `${uuid}.json`
-  );
-  if (!fs.existsSync(path.join(process.cwd(), "submissions", formid))) {
-    fsPromises.mkdir(path.join(process.cwd(), "submissions", formid));
+  if (database) {
+    // if database is available, save data to database
+
+    const query = await addResponse(
+      uuid,
+      formid,
+      startTime,
+      endTime,
+      JSON.stringify(data)
+    );
+    query ? console.log("data added to database") : console.log("error");
+  } else {
+    const fs = require("fs");
+    const fsPromises = require("fs").promises;
+    const path = require("path");
+    // create auto increment id for each form
+
+    const output = path.join(
+      process.cwd(),
+      "submissions",
+      formid,
+      `${uuid}.json`
+    );
+    if (!fs.existsSync(path.join(process.cwd(), "submissions", formid))) {
+      fsPromises.mkdir(path.join(process.cwd(), "submissions", formid));
+    }
+
+    fsPromises
+      .writeFile(output, JSON.stringify(data))
+      .then(() =>
+        console.log("data added to form " + formid + " with id " + uuid)
+      )
+      .catch((err: string) => console.log(err));
   }
-
-  fsPromises
-    .writeFile(output, JSON.stringify(data))
-    .then(() =>
-      console.log("data added to form " + formid + " with id " + uuid)
-    )
-    .catch((err: string) => console.log(err));
 }
