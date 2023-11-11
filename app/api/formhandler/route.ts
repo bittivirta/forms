@@ -38,7 +38,10 @@ async function saveOutput(res: FormInput) {
       endTime,
       JSON.stringify(data)
     );
-    query ? console.log("data added to database") : console.log("error");
+    query ? console.log("data added to database") : console.log("error", query);
+    let state = false;
+    query ? (state = true) : (state = false);
+    return state;
   } else {
     console.log("database not available, saving to file");
     const fs = require("fs");
@@ -62,5 +65,6 @@ async function saveOutput(res: FormInput) {
         console.log("data added to form " + formid + " with id " + uuid)
       )
       .catch((err: string) => console.log(err));
+    return true;
   }
 }
