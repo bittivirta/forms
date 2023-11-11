@@ -28,7 +28,6 @@ async function saveOutput(res: FormInput) {
   const uuid = data.inputId;
   const startTime = data.starttime;
   const endTime = data.timestamp;
-
   if (database) {
     // if database is available, save data to database
 
@@ -41,6 +40,7 @@ async function saveOutput(res: FormInput) {
     );
     query ? console.log("data added to database") : console.log("error");
   } else {
+    console.log("database not available, saving to file");
     const fs = require("fs");
     const fsPromises = require("fs").promises;
     const path = require("path");
