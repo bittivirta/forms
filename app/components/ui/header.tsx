@@ -7,10 +7,10 @@ import { faUserLock } from "@fortawesome/pro-solid-svg-icons";
 export default function Header() {
   return (
     <Navbar>
-      <Navbar.Brand href="https://bittivirta.fi/forms">
+      <Navbar.Brand href="/">
         <Image
           alt="Bittivirta Logo"
-          src="https://cdn.bittivirta.fi/graphics/logo/2023/bittivirta/svg/icon.svg"
+          src="/icon/icon.svg"
           className="mr-3"
           width={50}
           height={50}
@@ -19,13 +19,7 @@ export default function Header() {
           Bittivirta Forms
         </span>
       </Navbar.Brand>
-      <div className="flex md:order-2">
-        <Button href="./admin">
-          {" "}
-          <FontAwesomeIcon icon={faUserLock} fixedWidth className="mr-2" />
-          Login
-        </Button>
-      </div>
+      <div className="flex md:order-2"></div>
     </Navbar>
   );
 }
