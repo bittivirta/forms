@@ -104,13 +104,13 @@ export default function Footer() {
         <div className="grid items-center justify-center justify-between py-4 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-5">
           <div className="items-center flex justify-self-center	gap-8 p-4 col-span-1">
             <Image
-              src="./icon/code-from-finland.svg"
+              src="/icon/code-from-finland.svg"
               width={100}
               height={50}
               alt="Code from finland"
             />
             <Image
-              src="./icon/green-servers.svg"
+              src="/icon/green-servers.svg"
               width={100}
               height={50}
               alt="Suomalaista Palvelua / Finnish Service"
