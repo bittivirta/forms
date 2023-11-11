@@ -32,6 +32,7 @@ module.exports = {
         },
       },
       backgroundImage: {
+        "red-bg": "url('/icon/red-bg.svg')",
         "blue-bg": "url('/icon/blue-bg.svg')",
       },
     },

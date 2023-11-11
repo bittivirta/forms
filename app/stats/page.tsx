@@ -31,7 +31,8 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
-      error: "No data found",
+      error:
+        "Please check the URL or if you think this is an error, please contact us.",
       responses: [],
     };
   }
@@ -46,7 +47,8 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
-      error: "No data found",
+      error:
+        "Please check the URL or if you think this is an error, please contact us.",
       responses: [],
     };
   }
@@ -59,7 +61,10 @@ export default function Form() {
   const searchParams = useSearchParams();
 
   const [form, setForm] = useState<BivForm | null>(null);
-  const reqId = searchParams.get("id");
+  let reqId = "";
+  if (searchParams) {
+    reqId = searchParams.get("id")?.toString() as string;
+  }
 
   useEffect(() => {
     async function loadForm() {
@@ -73,7 +78,7 @@ export default function Form() {
   });
   if (!form) {
     return (
-      <main className="dark:bg-primary-900">
+      <main className="bg-[url('/icon/blue-bg.svg/')] bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
@@ -90,7 +95,7 @@ export default function Form() {
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || !form.general) {
     return (
-      <main className="dark:bg-primary-900">
+      <main className="bg-[url('/icon/red-bg.svg/')] bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
@@ -99,7 +104,7 @@ export default function Form() {
             </h1>
             <p className="text-3xl text-gray-600 dark:text-gray-200">
               Please check the URL or if you think this is an error, please
-              contact us at on Discord.
+              contact us.
             </p>
           </div>
         </div>
@@ -108,7 +113,7 @@ export default function Form() {
     );
   }
   return (
-    <main className="dark:bg-primary-900">
+    <main className="bg-[url('/icon/blue-bg.svg/')] bg-cover bg-center">
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
         <div className="w-full">

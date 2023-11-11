@@ -32,6 +32,7 @@ interface BivForm {
   fields: FormField[];
   error?: string;
   submit?: string;
+  expires?: number;
 }
 async function fetchForm(id: string | null): Promise<BivForm> {
   try {
@@ -40,7 +41,8 @@ async function fetchForm(id: string | null): Promise<BivForm> {
     }
   } catch (error) {
     return {
-      error: "No data found",
+      error:
+        "Please check the URL or if you think this is an error, please contact us.",
       fields: [],
     };
   }
@@ -66,8 +68,12 @@ export default function Form() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
+
   const [form, setForm] = useState<BivForm | null>(null);
-  const reqId = searchParams.get("id");
+  let reqId = "";
+  if (searchParams) {
+    reqId = searchParams.get("id")?.toString() as string;
+  }
   let starttime = Date.now();
   // generate random uuid
   const inputId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -153,7 +159,7 @@ export default function Form() {
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || form.fields.length === 0) {
     return (
-      <main className="dark:bg-primary-900">
+      <main className="bg-[url('/icon/red-bg.svg/')] bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
@@ -162,7 +168,7 @@ export default function Form() {
             </h1>
             <p className="text-3xl text-gray-600 dark:text-gray-200">
               {form.error ||
-                "Requested site could not be found. Please check the URL or if you think this is an error, please contact us."}
+                "Please check the URL or if you think this is an error, please contact us."}
             </p>
           </div>
         </div>
@@ -180,6 +186,13 @@ export default function Form() {
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-200">
             {form.description}
+          </p>
+          <p className="text-l text-red-900 dark:text-gray-200 py-4">
+            {form.expires
+              ? `This form is scheduled to close down at ` +
+                new Date(form.expires * 1000).toUTCString() +
+                "."
+              : ""}
           </p>
         </div>
         <div>
@@ -217,7 +230,7 @@ export default function Form() {
                     name={field.id}
                     className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block border-2 p-4 mt-4 w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     value={
-                      searchParams.get(field.id) || field.value || undefined
+                      searchParams?.get(field.id) || field.value || undefined
                     }
                     min={field.min}
                     max={field.max}

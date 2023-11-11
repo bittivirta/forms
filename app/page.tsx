@@ -15,7 +15,7 @@ export default function Home() {
                 Bittivirta Forms
               </h1>
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 lg:gap-8 xl:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-2 py-4 lg:gap-8 xl:grid-cols-3">
               <div className="rounded-lg bg-primary-100 p-4 text-primary-600 dark:bg-primary-900 dark:text-primary-300">
                 <h2 className="text-3xl font-extrabold leading-tight">
                   Hassle-free
@@ -67,6 +67,33 @@ export default function Home() {
                     statistics, you can see your data in real-time and export it
                     in JSON. With real-time data you can share them with your
                     colleagues.
+                  </p>
+                </span>
+              </div>
+              <div className="rounded-lg bg-primary-100 p-4 text-primary-600 dark:bg-primary-900 dark:text-primary-300">
+                <h2 className="text-3xl font-extrabold leading-tight">
+                  Easy to use
+                </h2>
+                <span className="text-primary-500 dark:text-primary-400">
+                  <p>
+                    Filling forms have never been easier, with Bittivirta Forms.
+                    For on premise solution customer friendly interface is
+                    appealing, modern and easy to use. For cloud solution you
+                    can use your own domain name and logo.
+                  </p>
+                </span>
+              </div>
+              <div className="rounded-lg bg-primary-100 p-4 text-primary-600 dark:bg-primary-900 dark:text-primary-300">
+                <h2 className="text-3xl font-extrabold leading-tight">
+                  Open source
+                </h2>
+                <span className="text-primary-500 dark:text-primary-400">
+                  <p>
+                    This project is open source with MIT license. If you find
+                    something that you would like to implement or fix, please
+                    create a pull request or make a fork of this project. With
+                    the MIT license you can use this project for commercial
+                    purposes for self hosted version.
                   </p>
                 </span>
               </div>
