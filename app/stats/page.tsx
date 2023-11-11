@@ -78,7 +78,7 @@ export default function Form() {
   });
   if (!form) {
     return (
-      <main className="dark:bg-primary-900">
+      <main className="bg-[url('/icon/blue-bg.svg/')] bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
@@ -113,7 +113,7 @@ export default function Form() {
     );
   }
   return (
-    <main className="dark:bg-primary-900">
+    <main className="bg-[url('/icon/blue-bg.svg/')] bg-cover bg-center">
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
         <div className="w-full">
