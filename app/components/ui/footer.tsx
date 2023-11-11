@@ -139,9 +139,9 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div className="p-4 text-gray-600 dark:text-white justify-self-center sm:text-center md:text-end">
+          <div className="p-4 text-gray-600 dark:text-white justify-self-center sm:text-center md:text-center lg:text-end">
             <p>&copy; Bittivirta</p>
-            <p className="text-sm">VAT ID: FI28842701</p>
+            <p className="text-sm ">VAT ID: FI28842701</p>
           </div>
         </div>
       </div>
