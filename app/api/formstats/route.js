@@ -1,37 +1,48 @@
 import { NextResponse } from "next/server";
+import {
+  getDbResponses,
+  databaseAvailable,
+  getForm,
+} from "../../lib/db-functions";
 
 // Define an async function to handle GET requests
 export async function GET(request) {
   // Extract the survey ID from the request URL's search parameters
   const surveyid = request.nextUrl.searchParams.get("id");
-  // Construct the path to the directory where the survey data is stored
-  const datapath = process.cwd() + "/submissions/" + surveyid;
-  // Import the fs.promises module for working with the file system
-  const fsPromises = require("fs").promises;
+  const database = await databaseAvailable();
+  if (database) {
+    const stats = await getResponsesFromDB(surveyid);
+    return NextResponse.json(stats, { status: 200 });
+  } else {
+    // Construct the path to the directory where the survey data is stored
+    const datapath = process.cwd() + "/submissions/" + surveyid;
+    // Import the fs.promises module for working with the file system
+    const fsPromises = require("fs").promises;
 
-  // Try to read the directory and get a list of all files in it
-  const files = await fsPromises
-    .readdir(datapath)
-    .catch((err) => console.error("Failed to read file", err));
+    // Try to read the directory and get a list of all files in it
+    const files = await fsPromises
+      .readdir(datapath)
+      .catch((err) => console.error("Failed to read file", err));
 
-  // If no files were found, return a 404 error
-  if (files === undefined || files.length === 0) {
-    return NextResponse.json({ error: "No data found" }, { status: 404 });
+    // If no files were found, return a 404 error
+    if (files === undefined || files.length === 0) {
+      return NextResponse.json({ error: "No data found" }, { status: 404 });
+    }
+
+    // Get the public fields for the survey
+    let data = await getPublicFields(surveyid);
+    // Get the responses for the survey
+    let responses = await getResponses(data, surveyid)
+      .then((responses) => {
+        // Parse the responses from JSON
+        responses = JSON.parse(responses);
+        return responses;
+      })
+      .catch((err) => console.error("Failed to read file", err));
+
+    // Return the responses as a JSON object with a 200 OK status
+    return NextResponse.json(responses, { status: 200 });
   }
-
-  // Get the public fields for the survey
-  let data = await getPublicFields(surveyid);
-  // Get the responses for the survey
-  let responses = await getResponses(data, surveyid)
-    .then((responses) => {
-      // Parse the responses from JSON
-      responses = JSON.parse(responses);
-      return responses;
-    })
-    .catch((err) => console.error("Failed to read file", err));
-
-  // Return the responses as a JSON object with a 200 OK status
-  return NextResponse.json(responses, { status: 200 });
 }
 
 // Define an async function to get the responses for a survey
@@ -103,10 +114,11 @@ async function getResponses(vars, surveyid) {
           responses["general"].response_amount + 1;
       });
   }
-  responses["general"].avg_duration =
+  responses["general"].avg_duration = Math.ceil(
     responses["general"].avg_duration /
-    responses["general"].duration_available /
-    1000;
+      responses["general"].duration_available /
+      1000
+  );
   // return the responses as a JSON string
   return JSON.stringify(responses);
 }
@@ -142,4 +154,73 @@ async function getPublicFields(surveyid) {
     fieldnames: fieldNames,
   };
   return fields;
+}
+
+async function getResponsesFromDB(surveyid) {
+  // using the database if available
+  // Get the public fields for the survey
+  const formFields = await getForm(surveyid);
+  if (formFields === undefined) {
+    return { error: "No data found" };
+  }
+  const formFieldsObj = JSON.parse(formFields);
+  const publicFields = formFieldsObj["publicfields"];
+  const pflen = publicFields.length;
+
+  // Get the responses for the survey
+  const dbResponses = await getDbResponses(surveyid);
+  // if no responses were found, return an 404 error
+  if (dbResponses === undefined) {
+    return { error: "No data found" };
+  }
+  // parse the responses from json
+  let resp = JSON.parse(dbResponses);
+
+  const responses = {};
+  // Add the survey keys to the responses object
+  responses["general"] = {
+    title: formFieldsObj["title"],
+    description: formFieldsObj["description"],
+    fields: publicFields,
+    response_amount: 0,
+    avg_duration: 0,
+    duration_available: 0,
+  };
+  // Add the responses to the responses object
+  responses["responses"] = {};
+  // Loop over the responses and process each one
+  for (let i = 0; i < Object.keys(resp).length; i++) {
+    let response = {
+      id: resp[i]["inputId"],
+      queries: [],
+    };
+    // for each response, loop over the public fields and add them to the response object
+    for (let j = 0; j < pflen; j++) {
+      let fieldid = publicFields[j];
+      let clientResp = JSON.parse(resp[i]["userInput"]);
+      response.queries.push(clientResp.userInput[fieldid]);
+      responses["responses"][i] = response;
+    }
+    // calculate the response time based on endtime - starttime if available
+    if (
+      typeof resp[i]["startTime"] === "number" &&
+      typeof resp[i]["endTime"] === "number"
+    ) {
+      responses["general"].avg_duration =
+        responses["general"].avg_duration +
+        (resp[i]["endTime"] - resp[i]["startTime"]);
+      responses["general"].duration_available++;
+    }
+    // calculate correct response amount
+    responses["general"].response_amount =
+      responses["general"].response_amount + 1;
+  }
+  // calculate the average response time, earch response time is in milliseconds so divide by 1000 to get seconds
+  responses["general"].avg_duration = Math.ceil(
+    responses["general"].avg_duration /
+      responses["general"].duration_available /
+      1000
+  );
+  // return the responses as a JSON string
+  return responses;
 }

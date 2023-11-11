@@ -33,14 +33,12 @@ interface BivForm {
   error?: string;
   submit?: string;
 }
-
 async function fetchForm(id: string | null): Promise<BivForm> {
   try {
     if (!id) {
       throw new Error("Form ID is missing");
     }
   } catch (error) {
-    console.error(error);
     return {
       error: "No data found",
       fields: [],
@@ -51,11 +49,10 @@ async function fetchForm(id: string | null): Promise<BivForm> {
   const json = await response.json();
   // if form contains form.fields submit then return json, if doesnt add submit button
   try {
-    if (!json.fields) {
+    if (!json.fields || json.fields.error) {
       throw new Error(json.error);
     }
   } catch (error) {
-    console.error(error);
     return {
       error: json.error,
       code: json.code,
@@ -69,7 +66,6 @@ export default function Form() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
-
   const [form, setForm] = useState<BivForm | null>(null);
   const reqId = searchParams.get("id");
   let starttime = Date.now();
@@ -92,8 +88,21 @@ export default function Form() {
 
     loadForm();
   });
+  // if form is not fetched yet, return loading page
   if (!form) {
-    return null;
+    return (
+      <main className="dark:bg-primary-900">
+        <Header />
+        <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
+          <div className="mx-auto max-w-2xl text-center">
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+              Loading...
+            </h1>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    );
   }
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -153,7 +162,7 @@ export default function Form() {
             </h1>
             <p className="text-3xl text-gray-600 dark:text-gray-200">
               {form.error ||
-                "Please check the URL or if you think this is an error, please contact us at on Discord."}
+                "Requested site could not be found. Please check the URL or if you think this is an error, please contact us."}
             </p>
           </div>
         </div>
