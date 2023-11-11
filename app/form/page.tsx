@@ -140,7 +140,9 @@ export default function Form() {
 
       // Handle response if necessary
       const data = await response.json();
-
+      if (data) {
+        window.location.href = `/success?id=${inputId}`;
+      }
       // ...
     } catch (error: any) {
       // Capture the error message to display to the user
@@ -149,10 +151,8 @@ export default function Form() {
       console.error(error);
     } finally {
       setTimeout(() => {
-        if (reqId) {
-          window.location.href = `/success?id=${inputId}`;
-        }
-      }, 1000);
+        console.log("Waiting...");
+      }, 20000);
     }
   }
 
