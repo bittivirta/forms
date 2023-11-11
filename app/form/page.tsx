@@ -230,7 +230,7 @@ export default function Form() {
                     name={field.id}
                     className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block border-2 p-4 mt-4 w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                     value={
-                      searchParams.get(field.id) || field.value || undefined
+                      searchParams?.get(field.id) || field.value || undefined
                     }
                     min={field.min}
                     max={field.max}
