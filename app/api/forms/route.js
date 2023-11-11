@@ -31,7 +31,7 @@ export async function GET(request) {
       {
         code: 410,
         error:
-          "Access denied, this module has expired. Please check the URL or if you think this is an error, please contact us at on Discord.",
+          "Access denied, this module has expired. Please check the URL or if you think this is an error, please contact us.",
       },
       { status: 410 }
     );
