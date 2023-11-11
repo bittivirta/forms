@@ -72,7 +72,19 @@ export default function Form() {
     loadForm();
   });
   if (!form) {
-    return null;
+    return (
+      <main className="dark:bg-primary-900">
+        <Header />
+        <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
+          <div className="mx-auto max-w-2xl text-center">
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+              Loading...
+            </h1>
+          </div>
+        </div>
+        <Footer />
+      </main>
+    );
   }
   const responseData = form.responses;
   //if fetched form contains {"error":"No data found"} then return 404 page
