@@ -93,8 +93,7 @@ export default function Footer() {
               </li>
               <li className="mb-4">
                 <a href="https://r.wotfi.ovh/EJOv0" className="hover:underline">
-                  <FontAwesomeIcon icon={faHotel} fixedWidth />
-                  Web hosting
+                  <FontAwesomeIcon icon={faHotel} fixedWidth /> Web hosting
                 </a>
               </li>
             </ul>
