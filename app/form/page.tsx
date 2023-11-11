@@ -152,7 +152,7 @@ export default function Form() {
         if (reqId) {
           window.location.href = `/success?id=${inputId}`;
         }
-      }, 150);
+      }, 1000);
     }
   }
 
