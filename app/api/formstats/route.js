@@ -165,8 +165,7 @@ async function getResponsesFromDB(surveyid) {
   }
   const formFieldsObj = JSON.parse(formFields);
   const publicFields = formFieldsObj["publicfields"];
-  const pflen = publicFields.length;
-
+  const pflen = getDbPublicFields(publicFields);
   // Get the responses for the survey
   const dbResponses = await getDbResponses(surveyid);
   // if no responses were found, return an 404 error
@@ -223,4 +222,14 @@ async function getResponsesFromDB(surveyid) {
   );
   // return the responses as a JSON string
   return responses;
+}
+
+function getDbPublicFields(fields) {
+  if (fields === undefined || fields === null) {
+    const pflen = 0;
+    return pflen;
+  } else {
+    const pflen = fields.length;
+    return pflen;
+  }
 }
