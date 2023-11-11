@@ -32,6 +32,7 @@ interface BivForm {
   fields: FormField[];
   error?: string;
   submit?: string;
+  expires?: number;
 }
 async function fetchForm(id: string | null): Promise<BivForm> {
   try {
@@ -180,6 +181,13 @@ export default function Form() {
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-200">
             {form.description}
+          </p>
+          <p className="text-l text-red-900 dark:text-gray-200 py-4">
+            {form.expires
+              ? `This form is scheduled to close down at ` +
+                new Date(form.expires * 1000).toUTCString() +
+                "."
+              : ""}
           </p>
         </div>
         <div>
