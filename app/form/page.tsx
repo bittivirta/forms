@@ -137,11 +137,10 @@ export default function Form() {
       if (!response.ok) {
         throw new Error("Failed to submit the data. Please try again.");
       }
-
       // Handle response if necessary
       const data = await response.json();
       if (data) {
-        window.location.href = `/success?id=${inputId}`;
+        //window.location.href = `/success?id=${inputId}`;
       }
       // ...
     } catch (error: any) {
