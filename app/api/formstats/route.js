@@ -160,6 +160,9 @@ async function getResponsesFromDB(surveyid) {
   // using the database if available
   // Get the public fields for the survey
   const formFields = await getForm(surveyid);
+  if (formFields === undefined) {
+    return { error: "No data found" };
+  }
   const formFieldsObj = JSON.parse(formFields);
   const publicFields = formFieldsObj["publicfields"];
   const pflen = publicFields.length;
