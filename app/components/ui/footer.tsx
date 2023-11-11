@@ -21,7 +21,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-6 md:col-span-3 sm:grid-cols-2">
           <div className="col-span-4 md:col-span-3 sm:col-span-2">
             <a
-              href="https://bittivirta.cloud/"
+              href="https://bittivirta.fi/"
               className="mb-2 flex items-center text-2xl font-semibold text-gray-900 dark:text-white sm:mb-0"
             >
               <Image
