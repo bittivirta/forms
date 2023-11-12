@@ -134,15 +134,13 @@ export default function Form() {
         },
         body: JSON.stringify(formdata),
       });
-      console.log(response);
-      console.log(JSON.stringify(formdata));
       if (!response.ok) {
         throw new Error("Failed to submit the data. Please try again.");
       }
       // Handle response if necessary
       const data = await response.json();
       if (data) {
-        //window.location.href = `/success?id=${inputId}`;
+        window.location.href = `/success?id=${inputId}`;
       }
       // ...
     } catch (error: any) {
