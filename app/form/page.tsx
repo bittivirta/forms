@@ -137,10 +137,11 @@ export default function Form() {
       if (!response.ok) {
         throw new Error("Failed to submit the data. Please try again.");
       }
-
       // Handle response if necessary
       const data = await response.json();
-
+      if (data) {
+        window.location.href = `/success?id=${inputId}`;
+      }
       // ...
     } catch (error: any) {
       // Capture the error message to display to the user
@@ -149,10 +150,8 @@ export default function Form() {
       console.error(error);
     } finally {
       setTimeout(() => {
-        if (reqId) {
-          window.location.href = `/success?id=${inputId}`;
-        }
-      }, 150);
+        console.log("Waiting...");
+      }, 20000);
     }
   }
 
