@@ -22,12 +22,14 @@ interface FormInput {
   userInput: [];
 }
 async function saveOutput(res: FormInput) {
+  console.log(res);
   const database = await databaseAvailable();
   const data = res;
   const formid = data.formid;
   const uuid = data.inputId;
   const startTime = data.starttime;
   const endTime = data.timestamp;
+  console.log("database available: " + database);
   if (database) {
     // if database is available, save data to database
 
