@@ -1,0 +1,2 @@
+[install.scopes]
+@fortawesome = { token = "$NPMRC", url = "//npm.fontawesome.com/" }
