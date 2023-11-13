@@ -82,7 +82,7 @@ export default function Form() {
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
               Loading...
             </h1>
           </div>
@@ -99,10 +99,10 @@ export default function Form() {
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
               404
             </h1>
-            <p className="text-3xl text-gray-600 dark:text-gray-200">
+            <p className="text-3xl text-gray-200 dark:text-gray-300">
               Please check the URL or if you think this is an error, please
               contact us.
             </p>
@@ -117,16 +117,16 @@ export default function Form() {
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
         <div className="w-full">
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
             {form.general.title}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-200">
+          <p className="text-xl text-gray-100 dark:text-gray-200">
             {form.general.description}
           </p>
           <hr className="p-4 mt-4" />
           <div className="flex flex-row">
             <div className="w-1/2">
-              <p className="text-xl text-gray-600 dark:text-gray-200 w-full">
+              <p className="text-xl text-gray-100 dark:text-gray-200 w-full">
                 <FontAwesomeIcon
                   icon={faPaperPlane}
                   fixedWidth
@@ -137,7 +137,7 @@ export default function Form() {
               </p>
             </div>
             <div className="w-1/2">
-              <p className="text-xl text-gray-600 dark:text-gray-200 w-full">
+              <p className="text-xl text-gray-100 dark:text-gray-200 w-full">
                 <FontAwesomeIcon
                   icon={faStopwatch}
                   fixedWidth
