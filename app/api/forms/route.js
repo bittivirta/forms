@@ -46,6 +46,7 @@ async function fetchData(database, surveyid) {
   ) {
     return undefined;
   }
+  console.log(database + " database state");
   if (database) {
     const queryContents = await getForm(surveyid);
     return queryContents;
