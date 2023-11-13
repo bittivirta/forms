@@ -9,7 +9,8 @@ export async function POST(req: Request) {
     );
   }
   const res = await req.json();
-  saveOutput(res);
+  const state = await saveOutput(res);
+  return NextResponse.json({ state: state }, { status: 200 });
 }
 
 // save request json to file, path for data is /submissions/formname/output.json
