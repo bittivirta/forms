@@ -150,7 +150,8 @@ export default function Form() {
       console.error(error);
     } finally {
       setTimeout(() => {
-        console.log("Waiting...");
+        console.log("Waiting for server...");
+        setIsLoading(false);
       }, 20000);
     }
   }
@@ -162,10 +163,10 @@ export default function Form() {
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
+            <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
               {form.code || "404"}
             </h1>
-            <p className="text-3xl text-gray-600 dark:text-gray-200">
+            <p className="text-3xl text-gray-200 dark:text-gray-300">
               {form.error ||
                 "Please check the URL or if you think this is an error, please contact us."}
             </p>
