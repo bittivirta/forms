@@ -82,6 +82,7 @@ function test_connection() {
   return new Promise((resolve) => {
     conn().connect((err: string) => {
       if (err) {
+        console.log(err);
         resolve(false);
       } else {
         resolve(true);
