@@ -13,5 +13,17 @@ export async function GET(request) {
       { status: 404 }
     );
   }
-  return NextResponse.json(JSON.parse(data));
+  if (data) {
+    if (data.error) {
+      return NextResponse.json(
+        {
+          code: 500,
+          data,
+        },
+        { status: 500 }
+      );
+    } else {
+      return NextResponse.json(JSON.parse(data));
+    }
+  }
 }
