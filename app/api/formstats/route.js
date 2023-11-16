@@ -8,7 +8,8 @@ export async function GET(request) {
     return NextResponse.json(
       {
         code: 404,
-        error: "No data found",
+        error:
+          "Please check the URL or if you think this is an error, please contact us.",
       },
       { status: 404 }
     );
@@ -18,7 +19,7 @@ export async function GET(request) {
       return NextResponse.json(
         {
           code: 500,
-          data,
+          error: "Internal server error " + data.error,
         },
         { status: 500 }
       );
