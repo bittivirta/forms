@@ -53,6 +53,7 @@ async function formRowsToJson(rows: any) {
 
   data["publicFields"] = JSON.parse(data["publicFields"]);
   data["fields"] = JSON.parse(data["fields"]);
+  data["expires"] = data["expires"] === null ? undefined : data["expires"];
   data = JSON.stringify(data);
   return data;
 }
