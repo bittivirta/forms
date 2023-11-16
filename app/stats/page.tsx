@@ -20,6 +20,7 @@ interface BivForm {
   };
   responses: [];
   error?: string;
+  code?: string;
 }
 
 // call api to get form data or search specific form data with uuid
@@ -31,6 +32,7 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
+      code: "404",
       error:
         "Please check the URL or if you think this is an error, please contact us.",
       responses: [],
@@ -47,8 +49,8 @@ async function fetchFormStats(id: string | null): Promise<BivForm> {
   } catch (error) {
     console.error(error);
     return {
-      error:
-        "Please check the URL or if you think this is an error, please contact us.",
+      code: json.code,
+      error: json.error,
       responses: [],
     };
   }
@@ -100,11 +102,10 @@ export default function Form() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
-              404
+              {form.code}
             </h1>
             <p className="text-3xl text-gray-200 dark:text-gray-300">
-              Please check the URL or if you think this is an error, please
-              contact us.
+              {form.error}
             </p>
           </div>
         </div>

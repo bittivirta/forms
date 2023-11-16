@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addResponse, databaseAvailable } from "../../lib/db-functions";
+import { addSubmission } from "../../lib/db-connector";
 
 export async function POST(req: Request) {
   if (req.headers.get("content-type") !== "application/json") {
@@ -10,65 +10,36 @@ export async function POST(req: Request) {
   }
   const res = await req.json();
   const state = await saveOutput(res);
-  return NextResponse.json({ state: state }, { status: 200 });
+  if (state.error) {
+    return NextResponse.json(
+      {
+        code: 500,
+        error: "Internal server error " + state.error,
+      },
+      { status: 500 }
+    );
+  }
+  return NextResponse.json(
+    {
+      code: 200,
+      raw: state,
+    },
+    { status: 200 }
+  );
 }
-
-// save request json to file, path for data is /submissions/formname/output.json
-interface FormInput {
-  inputId: string;
-  formid: string;
-  starttime: number;
-  timestamp: number;
-  userInput: [];
-}
-async function saveOutput(res: FormInput) {
-  const database = await databaseAvailable();
+async function saveOutput(res: any) {
   const data = res;
   const formid = data.formid;
   const uuid = data.inputId;
   const startTime = data.starttime;
   const endTime = data.timestamp;
-  if (database) {
-    // if database is available, save data to database
 
-    const query = await addResponse(
-      uuid,
-      formid,
-      startTime,
-      endTime,
-      JSON.stringify(data)
-    );
-    query ? console.log("data added to database") : console.log("error", query);
-    let state = false;
-    query ? (state = true) : (state = false);
-    if (state) {
-      return NextResponse.json(res, { status: 200 });
-    }
-  } else {
-    console.log("database not available, saving to file");
-    const fs = require("fs");
-    const fsPromises = require("fs").promises;
-    const path = require("path");
-    // create auto increment id for each form
-
-    const output = path.join(
-      process.cwd(),
-      "submissions",
-      formid,
-      `${uuid}.json`
-    );
-    if (!fs.existsSync(path.join(process.cwd(), "submissions", formid))) {
-      fsPromises.mkdir(path.join(process.cwd(), "submissions", formid));
-    }
-
-    const write = fsPromises
-      .writeFile(output, JSON.stringify(data))
-      .then(() =>
-        console.log("data added to form " + formid + " with id " + uuid)
-      )
-      .catch((err: string) => console.log(err));
-    if (write) {
-      return NextResponse.json(res, { status: 200 });
-    }
-  }
+  const query = await addSubmission(
+    uuid,
+    formid,
+    startTime,
+    endTime,
+    JSON.stringify(data)
+  );
+  return query;
 }
