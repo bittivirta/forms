@@ -139,7 +139,7 @@ export default function Form() {
       }
       // Handle response if necessary
       const data = await response.json();
-      if (data) {
+      if (!data.error) {
         window.location.href = `/success?id=${inputId}`;
       }
       // ...
