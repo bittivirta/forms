@@ -213,3 +213,40 @@ async function getFormField(id: string, field: string) {
     return { error: err.code };
   }
 }
+
+/* Function for adding a form submission to the database
+ * @param inputId: id of form submission
+ * @param formId: id of form
+ * @param startTime: start time of form submission
+ * @param endTime: end time of form submission
+ * @param userInput: user input of form submission
+ * @returns JSON object with field
+ */
+export async function addSubmission(
+  inputId: string,
+  formId: string,
+  startTime: number,
+  endTime: number,
+  userInput: string
+) {
+  try {
+    const [rows, fields, err] = await pool.execute(
+      "INSERT INTO submissions (inputId, formId, startTime, endTime, userInput) VALUES (?, ?, ?, ?, ?)",
+      [inputId, formId, startTime, endTime, userInput]
+    );
+    return rows;
+  } catch (err: any) {
+    if (err.code == "ER_DUP_ENTRY") {
+      const resubmit = (await addSubmission(
+        "#" + inputId,
+        formId,
+        startTime,
+        endTime,
+        userInput
+      )) as any;
+      return resubmit;
+    } else {
+      return { error: err.code };
+    }
+  }
+}
