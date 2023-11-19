@@ -121,7 +121,7 @@ export default function Form() {
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-100 md:text-5xl lg:text-6xl">
             {form.general.title}
           </h1>
-          <p className="text-xl text-gray-100 dark:text-gray-200">
+          <p className="text-xl text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
             {form.general.description}
           </p>
           <hr className="p-4 mt-4" />
