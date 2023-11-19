@@ -53,7 +53,10 @@ export default function Footer() {
             </h2>
             <ul className="text-gray-500 dark:text-gray-400">
               <li className="mb-4">
-                <a href="https://r.wotfi.ovh/8cLhG" className="hover:underline">
+                <a
+                  href="https://bittivirta.cloud/tietoa.php?language=english"
+                  className="hover:underline"
+                >
                   <FontAwesomeIcon icon={faInfoCircle} fixedWidth /> About
                 </a>
               </li>
@@ -75,24 +78,36 @@ export default function Footer() {
             </h2>
             <ul className="text-gray-500 dark:text-gray-400">
               <li className="mb-4">
-                <a href="https://r.wotfi.ovh/49QWL" className="hover:underline">
+                <a
+                  href="https://bittivirta.cloud/pelipalvelimet.php?language=english"
+                  className="hover:underline"
+                >
                   <FontAwesomeIcon icon={faGamepad} fixedWidth /> Game servers
                 </a>
               </li>
               <li className="mb-4">
-                <a href="https://r.wotfi.ovh/ZHDYZ" className="hover:underline">
+                <a
+                  href="https://bittivirta.cloud/virtuaalipalvelimet.php?language=english"
+                  className="hover:underline"
+                >
                   <FontAwesomeIcon icon={faDiceD6} fixedWidth /> Virtual Servers
                   (VPS)
                 </a>
               </li>
               <li className="mb-4">
-                <a href="https://r.wotfi.ovh/B079T" className="hover:underline">
+                <a
+                  href="https://bittivirta.cloud/store/dedikoidut-palvelimet?language=english"
+                  className="hover:underline"
+                >
                   <FontAwesomeIcon icon={faServer} fixedWidth /> Dedicated
                   servers
                 </a>
               </li>
               <li className="mb-4">
-                <a href="https://r.wotfi.ovh/EJOv0" className="hover:underline">
+                <a
+                  href="https://bittivirta.cloud/webhotellit.php?language=english"
+                  className="hover:underline"
+                >
                   <FontAwesomeIcon icon={faHotel} fixedWidth /> Web hosting
                 </a>
               </li>
@@ -120,7 +135,7 @@ export default function Footer() {
             <ul className="text-lg flex justify-center items-center my-5 lg:my-0">
               <li className="mb-2">
                 <Link
-                  href="#"
+                  href="https://bittivirta.cloud/terms.php"
                   className="text-gray-500 dark:text-gray-400 transition-all duration-200 ease-in-out p-3 px-10 rounded-full block hover:text-primary-100 hover:bg-primary-600 text-md break-keep"
                 >
                   <FontAwesomeIcon icon={faFileSignature} fixedWidth /> Terms of
