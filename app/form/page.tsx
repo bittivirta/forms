@@ -211,7 +211,7 @@ export default function Form() {
                       <Link
                         href={field.link ? field.link : "#"}
                         target="_blank"
-                        className="text-blue-500"
+                        className="text-blue-700 dark:text-blue-300"
                       >
                         {field.placeholder}
                       </Link>
