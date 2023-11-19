@@ -176,6 +176,7 @@ export default function Form() {
       </main>
     );
   }
+
   return (
     <main className="dark:bg-primary-900">
       <Header />
@@ -184,7 +185,7 @@ export default function Form() {
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
             {form.title}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-200">
+          <p className="text-xl text-gray-600 dark:text-gray-200 whitespace-pre-wrap">
             {form.description}
           </p>
           <p className="text-l text-red-900 dark:text-gray-200 py-4">
