@@ -154,7 +154,7 @@ async function statsRowsToJson(rows: any, id: string) {
   const formName = await getFormField(id, "title");
   const formDesc = await getFormField(id, "description");
   const publicFields = await getFormField(id, "publicFields");
-  const fields = JSON.parse(publicFields);
+  const fields = await parsePublicFields(publicFields);
 
   responses["general"] = {
     title: formName,
@@ -193,7 +193,6 @@ async function statsRowsToJson(rows: any, id: string) {
       responses["general"]["duration_available"] /
       1000
   );
-
   return JSON.stringify(responses);
 }
 
@@ -213,6 +212,19 @@ async function getFormField(id: string, field: string) {
   } catch (err: any) {
     return { error: err.code };
   }
+}
+/* Function to parse public fields from database
+ * @param fields: fields from database
+ * @returns JSON object with field
+ */
+
+async function parsePublicFields(fields: any) {
+  // if fields is null or undefined, return empty array
+  if (fields === undefined || fields === null) {
+    return [];
+  }
+  let data = JSON.parse(fields);
+  return data;
 }
 
 /* Function for adding a form submission to the database
