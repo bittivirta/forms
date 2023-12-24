@@ -32,8 +32,8 @@ module.exports = {
         },
       },
       backgroundImage: {
-        "red-bg": "url('/icon/red-bg.svg')",
-        "blue-bg": "url('/icon/blue-bg.svg')",
+        "waves": "url('https://cdn.bittivirta.fi/brand/background/waves/svg/animated/blue.svg')",
+        "waves-error": "url('https://cdn.bittivirta.fi/brand/background/waves/svg/animated/error.svg')",
       },
     },
     plugins: [require("flowbite/plugin")],
