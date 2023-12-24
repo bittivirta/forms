@@ -107,7 +107,7 @@ export default function Home() {
               :
               <div>
                 <p className="p-4 text-xl max-w-4xl mx-auto text-white">
-                  Bittivirta Forms is Bittivirta's forms solution for collecting
+                  Bittivirta Forms is Bittivirta&apos;s forms solution for collecting
                   feedback and other data confidentially and securely. Bittivirta
                   Forms is built with security and privacy in mind.
                 </p>
