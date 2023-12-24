@@ -40,7 +40,7 @@ export default function Success_page() {
   }
   // if UUID is valid, return success page
   return (
-    <main className="bg-[url('/icon/blue-bg.svg/')] bg-cover bg-center">
+    <main className="bg-waves bg-cover bg-center">
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
         <div className="mx-auto max-w-2xl text-center">
