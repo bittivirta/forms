@@ -17,7 +17,7 @@ import {
 export default function Footer() {
   return (
     <footer className="bg-gray-50 dark:bg-gray-800">
-      <div className="lg:-10 mx-auto max-w-screen-xl p-4 py-6 md:p-8">
+      <div className="container mx-auto p-4 py-6 md:p-8">
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-6 md:col-span-3 sm:grid-cols-2">
           <div className="col-span-4 md:col-span-3 sm:col-span-2">
             <a
@@ -26,14 +26,18 @@ export default function Footer() {
             >
               <Image
                 alt="Bittivirta Logo"
-                src="/icon/icon.svg"
-                className="mr-3"
-                width={50}
+                src="https://cdn.bittivirta.fi/brand/logo/logo.svg"
+                className="mr-3 dark:hidden"
+                width={150}
                 height={50}
               />
-              <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-                Bittivirta
-              </span>
+              <Image
+                alt="Bittivirta Logo"
+                src="https://cdn.bittivirta.fi/brand/logo/light/logo.svg"
+                className="mr-3 hidden dark:block"
+                width={150}
+                height={50}
+              />
             </a>
             <p className="my-4 font-light text-gray-500 dark:text-gray-400">
               Bittivirta provides a variety of IT services, including
@@ -115,9 +119,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="lg:-10 mx-auto max-w-screen-xl">
-        <div className="grid items-center justify-center justify-between py-4 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-5">
-          <div className="items-center flex justify-self-center	gap-8 p-4 col-span-1">
+      <div className="container mx-auto">
+        <div className="grid items-center justify-between p-4 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-5">
+          <div className="items-center flex gap-8 col-span-1">
             <Image
               src="/icon/avainlippu_rgb.svg"
               width={50}
@@ -154,7 +158,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div className="p-4 text-gray-600 dark:text-white justify-self-center sm:text-center md:text-center lg:text-end">
+          <div className="text-gray-600 dark:text-white justify-self-end sm:text-center md:text-center lg:text-end">
             <p>&copy; Bittivirta</p>
             <p className="text-sm ">VAT ID: FI28842701</p>
           </div>
