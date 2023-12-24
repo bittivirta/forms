@@ -1,2 +1,2 @@
 [install.scopes]
-@fortawesome = { token = "$NPMRC", url = "//npm.fontawesome.com/" }
+"@fortawesome" = {url = "https://npm.fontawesome.com/:_authToken=$FONTAWESOME_NPM_AUTH_TOKEN"}
