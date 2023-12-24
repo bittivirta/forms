@@ -97,7 +97,7 @@ export default function Form() {
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || !form.general) {
     return (
-      <main className="bg-[url('/icon/red-bg.svg/')] bg-cover bg-center">
+      <main className="bg-waves-error bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">

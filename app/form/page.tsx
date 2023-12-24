@@ -159,7 +159,7 @@ export default function Form() {
   //if fetched form contains {"error":"No data found"} then return 404 page
   if (form.error || form.fields.length === 0) {
     return (
-      <main className="bg-[url('/icon/red-bg.svg/')] bg-cover bg-center">
+      <main className="bg-waves-error bg-cover bg-center">
         <Header />
         <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
           <div className="mx-auto max-w-2xl text-center">
@@ -191,8 +191,8 @@ export default function Form() {
           <p className="text-l text-red-900 dark:text-gray-200 py-4">
             {form.expires
               ? `This form is scheduled to close down at ` +
-                new Date(form.expires * 1000).toUTCString() +
-                "."
+              new Date(form.expires * 1000).toUTCString() +
+              "."
               : ""}
           </p>
         </div>

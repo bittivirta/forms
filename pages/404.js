@@ -8,7 +8,7 @@ const ubuntu = Ubuntu({ subsets: ["latin"], weight: ["400", "700"] });
 export default function Custom404() {
   return (
     <main
-      className={`bg-[url('/icon/red-bg.svg/')] bg-cover bg-center ${ubuntu.className}`}
+      className={`bg-waves-error bg-cover bg-center ${ubuntu.className}`}
     >
       <Header />
       <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-12 lg:py-16">
