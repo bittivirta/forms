@@ -6,14 +6,8 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
 
-  const [env, setEnv] = useState("development");
+  const env = process.env.NODE_ENV;
 
-  useEffect(() => {
-    const environment = process.env.NODE_ENV;
-    if (environment === "production") {
-      setEnv("production");
-    }
-  }, [process.env.NODE_ENV]);
 
   return (
     <main>
